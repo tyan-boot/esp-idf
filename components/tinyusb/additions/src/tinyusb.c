@@ -57,8 +57,10 @@ static void configure_pins(usb_hal_context_t *usb)
 
 esp_err_t tinyusb_driver_install(const tinyusb_config_t *config)
 {
+#if TINYUSB_BUILT_IN_HID_DESC
     tusb_desc_device_t *dev_descriptor;
     const char **string_descriptor;
+#endif
     ESP_RETURN_ON_FALSE(config, ESP_ERR_INVALID_ARG, TAG, "invalid argument");
     // Enable APB CLK to USB peripheral
     periph_module_enable(PERIPH_USB_MODULE);
@@ -70,10 +72,12 @@ esp_err_t tinyusb_driver_install(const tinyusb_config_t *config)
     usb_hal_init(&hal);
     configure_pins(&hal);
 
+#if TINYUSB_BUILT_IN_HID_DESC
     dev_descriptor = config->descriptor ? config->descriptor : &descriptor_kconfig;
     string_descriptor = config->string_descriptor ? config->string_descriptor : descriptor_str_kconfig;
 
     tusb_set_descriptor(dev_descriptor, string_descriptor);
+#endif
 
     ESP_RETURN_ON_FALSE(tusb_init(), ESP_FAIL, TAG, "Init TinyUSB stack failed");
 #if !CONFIG_TINYUSB_NO_DEFAULT_TASK

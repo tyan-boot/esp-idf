@@ -39,6 +39,9 @@ extern "C" {
 #         define CFG_TUD_HID_BUFSIZE 4
 #         warning "CFG_TUD_HID_BUFSIZE was too low and was set to 4"
 #      endif
+#      ifndef TINYUSB_BUILT_IN_HID_DESC
+#         define TINYUSB_BUILT_IN_HID_DESC 0
+#      endif
 #   endif
 
 #   if CFG_TUD_CDC

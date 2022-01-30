@@ -15,6 +15,8 @@
 #include "esp_log.h"
 #include "descriptors_control.h"
 
+#if TINYUSB_BUILT_IN_HID_DESC
+
 static const char *TAG = "tusb_desc";
 static tusb_desc_device_t s_descriptor;
 static char *s_str_descriptor[USB_STRING_DESCRIPTOR_ARRAY_SIZE];
@@ -22,8 +24,8 @@ static char *s_str_descriptor[USB_STRING_DESCRIPTOR_ARRAY_SIZE];
 
 #if CFG_TUD_HID //HID Report Descriptor
 uint8_t const desc_hid_report[] = {
-    TUD_HID_REPORT_DESC_KEYBOARD(HID_REPORT_ID(REPORT_ID_KEYBOARD), ),
-    TUD_HID_REPORT_DESC_MOUSE(HID_REPORT_ID(REPORT_ID_MOUSE), )
+    TUD_HID_REPORT_DESC_KEYBOARD(HID_REPORT_ID(REPORT_ID_KEYBOARD)),
+    TUD_HID_REPORT_DESC_MOUSE(HID_REPORT_ID(REPORT_ID_MOUSE))
 };
 #endif
 
@@ -120,7 +122,7 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid)
  * @return uint8_t const*
  */
 #if CFG_TUD_HID
-uint8_t const *tud_hid_descriptor_report_cb(void)
+uint8_t const *tud_hid_descriptor_report_cb(uint8_t itf)
 {
     return desc_hid_report;
 }
@@ -188,3 +190,5 @@ void tusb_clear_descriptor(void)
     memset(&s_str_descriptor, 0, sizeof(s_str_descriptor));
     tusb_desc_set = false;
 }
+
+#endif
